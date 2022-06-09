@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	serverlessv1 "github.com/serverless/api/v1"
+	serverlessv1 "github.com/SUMMERLm/serverless/api/v1"
 	//+kubebuilder:scaffold:imports
 )
 

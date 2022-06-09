@@ -31,8 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	serverlessv1 "github.com/serverless/api/v1"
-	"github.com/serverless/controllers"
+	serverlessv1 "github.com/SUMMERLm/serverless/api/v1"
+	"github.com/SUMMERLm/serverless/controllers"
 	//+kubebuilder:scaffold:imports
 )
 

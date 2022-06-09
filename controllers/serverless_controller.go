@@ -39,7 +39,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	serverlessv1 "github.com/serverless/api/v1"
+	serverlessv1 "github.com/SUMMERLm/serverless/api/v1"
 )
 
 type HpaThreadhold struct {
