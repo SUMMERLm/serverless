@@ -1,0 +1,20 @@
+# permissions for end users to view serverlesses.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: serverless-viewer-role
+rules:
+- apiGroups:
+  - serverless.pml.com.cn
+  resources:
+  - serverlesses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - serverless.pml.com.cn
+  resources:
+  - serverlesses/status
+  verbs:
+  - get

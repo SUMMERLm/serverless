@@ -1,0 +1,6 @@
+apiVersion: serverless.pml.com.cn/v1
+kind: Serverless
+metadata:
+  name: serverless-sample
+spec:
+  # TODO(user): Add fields here
