@@ -55,14 +55,7 @@ type ServerlessSpec struct {
 	// +required
 	RuntimeType string `json:"runtimeType,omitempty"`
 	// +required
-	// +kubebuilder:default=1
-	Dispersion int32 `json:"dispersion,omitempty"`
-	// +required
 	Workload Workload `json:"workload,omitempty"`
-	// +required
-	SchedulePolicy SchedulePolicy `json:"schedulePolicy,omitempty"`
-	// +optional
-	ClusterTolerations []corev1.Toleration `json:"clusterTolerations,omitempty"`
 }
 type Workload struct {
 	// +required
@@ -72,27 +65,6 @@ type Workload struct {
 	TraitServerless *TraitServerless `json:"traitServerless,omitempty"`
 }
 
-type SchedulePolicy struct {
-	// +optional
-	SpecificResource *metav1.LabelSelector `json:"specificResource,omitempty"`
-	// +optional
-	NetEnvironment *metav1.LabelSelector `json:"netenvironment,omitempty"`
-	// +optional
-	GeoLocation *metav1.LabelSelector `json:"geolocation,omitempty"`
-	// +optional
-	Provider *metav1.LabelSelector `json:"provider,omitempty"`
-}
-
-/*
-{
-"maxReplicas": 100,
-"maxQPS": 10000,
-"foundingmember": true,
-"threshhold": "minCPU:10,...."
-"qpsStep": 10,
-"resplicasStep": 1,
-}
-*/
 type TraitServerless struct {
 	MaxReplicas    int32  `json:"maxReplicas,omitempty"`
 	MaxQPS         int32  `json:"maxQPS,omitempty"`

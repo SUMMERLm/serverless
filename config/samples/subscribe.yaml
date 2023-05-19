@@ -1,0 +1,40 @@
+apiVersion: hermes.pml.com/v1
+kind: SubscriberRule
+metadata:
+  name: sample-s2-1
+  namespace: default 
+spec:
+  prometheusRule:
+    groups:
+    - name: serverless.rules.sample-s2-3.default
+      rules:
+      - alert: default+sample-s2-3+scale_up
+        annotations:
+          aggerateRules: ((sum(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))/(count(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))*sum(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))
+            )/count(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))))> bool
+            10 >0
+          receiverAddress: http://192.168.1.51:32000/serverles_hpa
+          returnValueFlag: "false"
+        expr: ((sum(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))/(count(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))*sum(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))
+          )/count(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))))> bool
+          10 >0
+        for: 1s
+        labels:
+          alertlabel: serverless
+          severity: critical
+      - alert: default+sample-s2-3+scale_down
+        annotations:
+          aggerateRules: ((sum(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))/(count(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))*sum(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))
+            )/count(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))))< bool
+            4 >0
+          receiverAddress: http://192.168.1.51:32000/serverles_hpa
+          returnValueFlag: "false"
+        expr: ((sum(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))/(count(rate(io_sid_traffics{component_id="fe48611c-2815-4fb8-bbab-10873ea8cab0",component_name="sample-s2-3"}[2m])))*sum(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))
+          )/count(((count(io_sid_traffics{pod=~"sample-s2-3.*"})by(pod)))))< bool
+          4 >0
+        for: 1s
+        labels:
+          alertlabel: serverless
+          severity: critical
+  subscribeType: SubsCondition
+  subscriberAddress: http://192.168.1.51:32000/serverles_hpa
