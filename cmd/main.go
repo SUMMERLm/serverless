@@ -48,7 +48,7 @@ func init() {
 
 	utilruntime.Must(serverlessv1.SubScriberRuleAddToScheme(scheme))
 
-	//	utilruntime.Must(serverlessv1.QuotaAddToScheme(scheme))
+	utilruntime.Must(serverlessv1.QuotaAddToScheme(scheme))
 
 	//+kubebuilder:scaffold:scheme
 }

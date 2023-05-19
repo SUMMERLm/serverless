@@ -1,11 +1,10 @@
 package v1
 
 import (
-	_ "k8s.io/apimachinery/pkg/runtime/schema"
-	_ "sigs.k8s.io/controller-runtime/pkg/scheme"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
 
-/*
 var (
 	// QuotaGroupVersion is group version used to register these objects
 	QuotaGroupVersion = schema.GroupVersion{Group: "serverless.pml.com.cn", Version: "v1"}
@@ -16,4 +15,3 @@ var (
 	// PromRuleAddToScheme adds the types in this group-version to the given scheme.
 	QuotaAddToScheme = QuotaSchemeBuilder.AddToScheme
 )
-*/

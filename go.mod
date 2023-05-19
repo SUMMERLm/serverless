@@ -3,7 +3,7 @@ module github.com/SUMMERLm/serverless
 go 1.19
 
 require (
-	github.com/SUMMERLm/quota v0.1.3
+	github.com/SUMMERLm/quota v0.1.5
 	github.com/jinxin-fu/hermes v0.0.0-20220521023410-1f7d600bbefd
 	github.com/onsi/ginkgo/v2 v2.9.1
 	github.com/onsi/gomega v1.27.4

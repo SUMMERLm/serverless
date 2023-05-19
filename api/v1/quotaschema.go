@@ -5,5 +5,5 @@ import (
 )
 
 func init() {
-	SchemeBuilder.Register(&quotav1.Quota{}, &quotav1.QuotaList{})
+	QuotaSchemeBuilder.Register(&quotav1.Quota{}, &quotav1.QuotaList{})
 }
