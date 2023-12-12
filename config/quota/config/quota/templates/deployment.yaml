@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quota
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/component: quota
+    app.kubernetes.io/created-by: serverless
+    app.kubernetes.io/instance: quota-manager
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/part-of: serverless
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      control-plane: quota-manager
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        control-plane: quota-manager
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+           - containerPort: 8000
+          volumeMounts:
+           - name: quota-config-vol
+             mountPath: /conf/quota
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 4096Mi
+            requests:
+              cpu: 500m
+              memory: 2048Mi
+      volumes:
+        - configMap:
+            name: quota-conf
+            items:
+              - key: kubeconfig
+                path: config
+              - key: kubeParentconfig
+                path: parentConfig
+          name: quota-config-vol
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

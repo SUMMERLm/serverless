@@ -1,0 +1,35 @@
+server:
+  run_mode: debug
+  #addr: :8000
+  #field1: 8001
+  #c2 edge1 :9000
+  #c1 clsuter1: 8000
+  #addr: :8001
+  #addr: :9000
+  addr: :8000
+k8sconfig:
+  #path: /root/.kube/config
+  path: /Users/lumingming/.kube/quotaConfig/quota_field
+  #path: /Users/lumingming/.kube/quotaConfig/quota_c2
+  #path: /Users/lumingming/.kube/quotaConfig/quota_c1
+wx:
+  appid: 112212
+  secret: 222222
+db:
+  driver_name: mysql
+  host: 127.0.0.1
+  port: 3306
+  database: test
+  username: root
+  password: root
+  charset: utf8
+
+hpa:
+  max_replica: -1
+  min_replica: 0
+  up_step: 1
+  down_step: 1
+etcd:
+  endpoint: "172.24.33.36:2379"
+serverless-config:
+  qpsQuotaUrl: "http://192.168.1.51:8000/serverles_qps_quota_hpa"

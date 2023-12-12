@@ -1,0 +1,103 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: quotas.serverless.pml.com.cn
+spec:
+  group: serverless.pml.com.cn
+  names:
+    kind: Quota
+    listKind: QuotaList
+    plural: quotas
+    singular: quota
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Quota is a specification for a Serverless Quotaresource
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: QuotaSpec is the spec for a Foo resource
+            properties:
+              childAlert:
+                items:
+                  properties:
+                    alert:
+                      type: boolean
+                    clusterName:
+                      type: string
+                  type: object
+                type: array
+              childName:
+                items:
+                  type: string
+                type: array
+              clusterAreaType:
+                type: string
+              localName:
+                type: string
+              networkRegister:
+                items:
+                  properties:
+                    clustername:
+                      type: string
+                    scnid:
+                      type: string
+                  type: object
+                type: array
+              podQpsIncreaseOrDecrease:
+                items:
+                  properties:
+                    podName:
+                      type: string
+                    qpsIncreaseOrDecrease:
+                      type: integer
+                  type: object
+                type: array
+              podQpsQuota:
+                items:
+                  properties:
+                    clusterName:
+                      type: string
+                    podName:
+                      type: string
+                    qpsQuota:
+                      type: integer
+                  type: object
+                type: array
+              podQpsReal:
+                items:
+                  properties:
+                    podName:
+                      type: string
+                    qpsReal:
+                      type: integer
+                  type: object
+                type: array
+              supervisorName:
+                type: string
+            type: object
+          status:
+            description: QuotaStatus defines the observed state of SubscriberRule
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

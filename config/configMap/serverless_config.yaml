@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  # url调整为所在集群的hpa地址，更换ip地址
-  hpaUrl: http://192.168.1.51:32000/serverles_hpa
-kind: ConfigMap
-metadata:
-  name: serverless-config
-  namespace: serverless-system

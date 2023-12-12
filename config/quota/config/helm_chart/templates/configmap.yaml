@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quota-conf
+  namespace: quota
+  labels:
+    app: quota
+    component: quota-conf
+data:
+  kubeconfig: |
+{{ .Files.Get "kubeconfig.json" | indent 4 }}
+  kubeParentconfig: |
+{{ .Files.Get "kubeParentconfig.json" | indent 4 }}

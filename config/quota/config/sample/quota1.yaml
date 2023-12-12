@@ -1,0 +1,20 @@
+apiVersion: serverless.pml.com.cn/v1
+kind: Quota
+metadata:
+  labels:
+    app.kubernetes.io/name: quota
+    app.kubernetes.io/instance: quota-sample
+    app.kubernetes.io/part-of: quota
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: quota
+  name: quota-sample
+spec:
+  supervisorName: field1
+  localName: cluster1
+  networkRegister: [{"scnid":"/pml/case7/c1/1:", "clustername":"c11"},{"scnid":"/pml/case7/c1/1","clustername":"c12"}]
+  childName: ["cluster11","cluster12","cluster13"]
+  childAlert: [{"clusterName":"cluster11", "alert": true },{"clusterName":"cluster12", "alert":true}]
+  clusterAreaType: cluster
+  podQpsQuota: [{"podName":"sample111", "clusterName":"clsuter1","qpsQuota": 20},{"podName":"sample112","clusterName":"clsuter1", "qpsQuota": 40}]
+  podQpsReal: [{"podName":"sample111", "qpsReal":18},{"podName":"sample112", "qpsReal":30}]
+  podQpsIncreaseOrDecrease: [{"podName":"sample111", "qpsIncreaseOrDecrease":0},{"podName":"sample112", "qpsIncreaseOrDecrease":0}]

@@ -1,0 +1,163 @@
+package api
+
+import (
+	"github.com/gin-gonic/gin"
+	"k8s.io/klog/v2"
+	"serverless_hpa/common"
+	"strings"
+)
+
+var done bool
+var doScale = "0"
+var doQuotaScale = "0"
+
+type Hpa_msg struct {
+	Namespace  string `json:"namespace"`
+	Name       string `json:"name"`
+	Hpa_action string `json:"hpaAction"`
+}
+
+func GetIndex(c *gin.Context) {
+	c.String(200, "Hello, get test")
+
+}
+
+func PostTest(c *gin.Context) {
+	hpaMsg := c.GetHeader("Alertname")
+	klog.Infof(hpaMsg)
+	c.String(200, "Hello，post test")
+
+}
+
+func ServerLessHpa(c *gin.Context) {
+	//get message by params
+	hpaMsg := c.GetHeader("Alertname")
+	//本地调试，上线还原
+	//body := c.Request.Body
+	//x, _ := io.ReadAll(body)
+	//var qResult model.Vector
+	//err := json.Unmarshal(x, &qResult)
+	//if err != nil {
+	//	klog.Infof(err.Error())
+	//	klog.Infof("Hpa header msg from prometheus is:: %s\n", hpaMsg)
+	//	done = false
+	//	c.JSON(501, done)
+	//	return
+	//}
+	//if len(qResult) == 0 {
+	//	done = false
+	//	klog.Infof("Hpa header msg from prometheus is:: %s\n", hpaMsg)
+	//	c.JSON(502, done)
+	//	return
+	//}
+	//singleValue := *qResult[0]
+	//doScale = singleValue.Value.String()
+	doScale = "2"
+	if doScale != "0" {
+		klog.Infof("Hpa header msg from prometheus is:: %s\n", hpaMsg)
+		hpaMsgList := strings.Split(hpaMsg, string('+'))
+		for _, str := range hpaMsgList {
+			klog.Infof("Hpa header msg from prometheus is:: %s\n", str)
+		}
+		namespaceHpa := hpaMsgList[0]
+		nameHpa := hpaMsgList[1]
+		hpaAction := hpaMsgList[2]
+		hpa := common.Hpa{
+			NameHpa:           nameHpa,
+			NamespaceHpa:      namespaceHpa,
+			NameSpaceQpsQuota: "hypermonitor",
+		}
+
+		//common.Init()
+		switch hpaAction {
+		case "scale_up":
+			klog.Infof("Scale_up: serverless  name: %s, namespace: %s,  hpaAction: %s;\n", nameHpa, namespaceHpa, hpaAction)
+			done = hpa.HpaSacleUp()
+		case "scale_down":
+			klog.Infof("Scale_down: serverless  name: %s, namespace: %s, hpaAction: %s;\n", nameHpa, namespaceHpa, hpaAction)
+			done = hpa.HpaScaleDown()
+		default:
+			klog.Infof("nothing to do....")
+			done = true
+		}
+		if done == true {
+			c.JSON(200, done)
+		} else {
+			c.JSON(500, done)
+		}
+	}
+}
+
+func ServerLessQpsQuotaHpa(c *gin.Context) {
+	//get message by params
+	hpaMsg := c.GetHeader("Alertname")
+	//本地调试，上线还原
+	//body := c.Request.Body
+	//x, _ := io.ReadAll(body)
+	//var qResult model.Vector
+	//err := json.Unmarshal(x, &qResult)
+	//if err != nil {
+	//	klog.Infof(err.Error())
+	//	klog.Infof("Hpa header msg from prometheus is:: %s\n", hpaMsg)
+	//	done = false
+	//	c.JSON(501, done)
+	//	return
+	//}
+	//if len(qResult) == 0 {
+	//	done = false
+	//	klog.Infof("Hpa header msg from prometheus is:: %s\n", hpaMsg)
+	//	c.JSON(502, done)
+	//	return
+	//}
+	//singleValue := *qResult[0]
+	//doQuotaScale = singleValue.Value.String()
+	doQuotaScale = "2"
+	if doQuotaScale != "0" {
+		klog.Infof("Quota hpa header msg from prometheus is: %s\n", hpaMsg)
+		hpaMsgList := strings.Split(hpaMsg, string('+'))
+		for _, str := range hpaMsgList {
+			klog.Infof("Quota hpa header msg from prometheus is: %s\n", str)
+		}
+		namespaceQuota := hpaMsgList[0]
+		nameQuota := hpaMsgList[1]
+		nameOfPod := hpaMsgList[2]
+		quotaAction := hpaMsgList[3]
+		quota := common.Quota{
+			NameQuota:         nameQuota,
+			NamespaceQuota:    namespaceQuota,
+			NameOfPod:         nameOfPod,
+			NameSpaceQpsQuota: "hypermonitor",
+		}
+
+		//common.Init()
+		switch quotaAction {
+		case "pod_qps_quota_up":
+			klog.Infof("Pod quota Scale_up: serverless  name: %s, namespace: %s,  quotaAction: %s;\n", nameQuota, namespaceQuota, quotaAction)
+			done = quota.QuotaRequire()
+		case "pod_qps_quota_down":
+			klog.Infof("Pod quota Scale_down: serverless  name: %s, namespace: %s,  quotaAction: %s;\n", nameQuota, namespaceQuota, quotaAction)
+			done = quota.QuotaReturn()
+		default:
+			klog.Infof("Quota nothing to do ....")
+			done = true
+		}
+		if done == true {
+			c.JSON(200, done)
+		} else {
+			c.JSON(500, done)
+		}
+	}
+}
+
+func ZeroAlert(c *gin.Context) {
+	var reqInfo common.AlertRequest
+	err := c.BindJSON(&reqInfo)
+	if err != nil {
+		klog.Info(err)
+		c.JSON(200, gin.H{"errcode": 400, "description": "Post Data Err"})
+		return
+	} else {
+		done = reqInfo.ZeroAlertInit()
+		c.JSON(200, done)
+	}
+}

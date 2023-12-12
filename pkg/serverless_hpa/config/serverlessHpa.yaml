@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serverless-hpa
+  namespace: serverless-system
+spec:
+  selector:
+    matchLabels:
+      app: serverless-hpa
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: serverless-hpa
+    spec:
+      containers:
+      - name: hpa
+        image: 172.17.9.231:8880/serverless/serverless_hpa:v2.4
+        ports:
+          - containerPort: 8000
+        volumeMounts:
+          - name: serverless-hpa-config-vol
+            mountPath: /conf/serverless
+      volumes:
+        - configMap:
+            name: serverless-hpa-conf
+            items:
+              - key: kubeconfig
+                path: config
+          name: serverless-hpa-config-vol

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: serverless-hpa
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "serverless-hpa.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - nodePort: {{ .Values.service.nodePort }}
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }} 
+      protocol: TCP
+  selector:
+    {{- include "serverless-hpa.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,47 @@
+apiVersion: serverless.pml.com.cn/v1
+kind: Serverless
+metadata:
+  annotations:
+  finalizers:
+  - serverless.hpa.finalizers.pml.com.cn
+  labels:
+    apps.gaia.io/component: sample-s2-5
+    apps.gaia.io/description: default-8677-20230413111950-12-2023042705
+  name: sample-s2-5
+  namespace: default
+spec:
+  module:
+    metadata:
+      labels:
+        apps.gaia.io/component: sample-s2-5
+        apps.gaia.io/description: default-8677-20230413111950-12-2023042705
+    spec:
+      containers:
+      - env:
+        - name: SCNNUM
+          value: "1"
+        - name: SCNID5
+          value: /inner-private/celeven/case11component5/1
+        image: nginx
+        name: case11component5
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      hostNetwork: true
+      nodeSelector:
+        hypernode.cluster.pml.com.cn/node-role: Public
+        hypernode.cluster.pml.com.cn/runtime-state: kata
+  name: sample-s2-5
+  namespace: default
+  runtimeType: kata
+  workload:
+    traitServerless:
+      foundingmember: true
+      maxReplicas: 100
+      resplicasStep: 1
+      threshold: '{"qpsMax":10,"cpuMin":0,"cpuMax":100,"qpsMin":4,"memMax":100,"memMin":0}'
+    workloadtype: serverless

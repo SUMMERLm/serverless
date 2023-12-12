@@ -1,0 +1,49 @@
+apiVersion: serverless.pml.com.cn/v1
+kind: Serverless
+metadata:
+  annotations:
+  finalizers:
+    - serverless.hpa.finalizers.pml.com.cn
+  labels:
+    apps.gaia.io/component: sample-s2-5-replica
+    apps.gaia.io/description: default-8677-20230413111950-12-2023042705
+  name: sample-s2-5-replica
+  namespace: serverless-test1
+spec:
+  module:
+    metadata:
+      labels:
+        apps.gaia.io/component: sample-s2-5-replica
+        apps.gaia.io/description: default-8677-20230413111950-12-2023042705
+    spec:
+      containers:
+        - env:
+            - name: SCNNUM
+              value: "1"
+            - name: SCNID1
+              value: /inner-private/celeven/sample-s2-5-replica/1
+          image: 172.17.9.231:8880/hypermonitorystack/serverless_press_app@sha256:c91a832f4657302b4bddde39fe2ee49a0ae97ea4724efca9ba0452e0198ec828
+          name: case11component2
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      hostNetwork: true
+      nodeSelector:
+        hypernode.cluster.pml.com.cn/node-role: Public
+        hypernode.cluster.pml.com.cn/runtime-state: kata
+  name: sample-s2-5-replica
+  namespace: serverless-test1
+  runtimeType: kata
+  workload:
+    traitServerless:
+      foundingmember: false
+      maxQPS: 0
+      maxReplicas: 100
+      qpsStep: 0
+      resplicasStep: 1
+      threshold: '{"qpsMin":10,"qpsMax":100,"cpuMin":20,"cpuMax":80,"memMax":80,"memMin":20}'
+    workloadtype: serverless

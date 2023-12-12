@@ -1,5 +1,6 @@
 #export https_proxy=http://192.168.97.36:7890 http_proxy=http://192.168.97.36:7890
 #export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+#export http_proxy=http://10.17.1.6:7890 https_proxy=http://10.17.1.6:7890
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
@@ -63,21 +64,24 @@ test: manifests generate fmt vet envtest ## Run tests.
 
 .PHONY: build
 build: manifests generate fmt vet ## Build manager binary.
-	go build -o bin/manager cmd/main.go
+	go build -o bin/serverless cmd/main.go
 
 .PHONY: run
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./cmd/main.go
 
-# If you wish built the manager image targeting other platforms you can use the --platform flag.
+# If you wish built the serverless image targeting other platforms you can use the --platform flag.
 # (i.e. docker build --platform linux/arm64 ). However, you must enable docker buildKit for it.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
-docker-build: test ## Build docker image with the manager.
+#docker-build: test ## Build docker image with the serverless.
+docker-build:
+	go mod download -x
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -v -o serverless cmd/main.go
 	docker build -t ${IMG} .
 
 .PHONY: docker-push
-docker-push: ## Push docker image with the manager.
+docker-push: ## Push docker image with the serverless.
 	docker push ${IMG}
 
 # PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
@@ -88,7 +92,7 @@ docker-push: ## Push docker image with the manager.
 # To properly provided solutions that supports more than one platform you should use this option.
 PLATFORMS ?= linux/arm64,linux/amd64,linux/s390x,linux/ppc64le
 .PHONY: docker-buildx
-docker-buildx: test ## Build and push docker image for the manager for cross-platform support
+docker-buildx: test ## Build and push docker image for the serverless for cross-platform support
 	# copy existing Dockerfile and insert --platform=${BUILDPLATFORM} into Dockerfile.cross, and preserve the original Dockerfile
 	sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' Dockerfile > Dockerfile.cross
 	- docker buildx create --name project-v3-builder
@@ -104,7 +108,7 @@ ifndef ignore-not-found
 endif
 
 .PHONY: install
-install: manifests kustomize  ## Install CRDs into the K8s cluster specified in ~/.kube/config.
+install: manifests  kustomize ## Install CRDs into the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/crd | kubectl apply -f -
 
 .PHONY: uninstall

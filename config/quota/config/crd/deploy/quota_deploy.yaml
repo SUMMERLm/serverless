@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quota
+  namespace: serverless
+spec:
+  selector:
+    matchLabels:
+      app: quota
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: quota
+    spec:
+      containers:
+        - name: quota
+          image: 172.17.9.231:8880/serverless/quota:v1.3
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: quota-config-vol
+              mountPath: /conf/quota
+      volumes:
+        - configMap:
+            name: quota-conf
+            items:
+              - key: kubeconfig
+                path: config
+              - key: kubeParentconfig
+                path: parentConfig
+          name: quota-config-vol
+      nodeSelector:
+        quota.cluster.pml.com.cn/node-role: System
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Equal

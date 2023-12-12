@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  # url调整为所在集群的hpa地址，更换ip地址
+  hpaUrl: "{{ .Values.configmap.hpaUrl }}"
+  qpsQuotaUrl: "{{ .Values.configmap.qpsQuotaUrl }}"
+  localClusterName: "{{ .Values.configmap.localClusterName }}"
+  parentClusterName: "{{ .Values.configmap.parentClusterName }}"
+  etcdEndpoint: "{{ .Values.configmap.etcdEndpoint }}"
+kind: ConfigMap
+metadata:
+  name: serverless-config
+  namespace: {{ .Values.namespace }}

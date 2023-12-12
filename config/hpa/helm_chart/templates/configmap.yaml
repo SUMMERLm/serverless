@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: serverless-hpa-conf
+  namespace: {{ .Values.namespace }}  
+  labels:
+    app: serverless-hpa
+    component: serverless-hpa-conf
+data:
+  qps-quota-url: {{ .Values.configmap.qpsQuotaUrl }}
+  etcd-endpoint: {{ .Values.configmap.etcdEndpoint }}
+  kubeconfig: |
+{{ .Files.Get "kubeconfig.json" | indent 4 }}

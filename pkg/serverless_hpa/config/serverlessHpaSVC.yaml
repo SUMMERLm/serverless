@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-service
+  namespace: serverless-system
+spec:
+  ports:
+    - nodePort: 32000
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: serverless-hpa
+  type: NodePort
