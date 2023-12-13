@@ -2,11 +2,11 @@ package lib
 
 import (
 	"flag"
+	"github.com/SUMMERLm/serverless/pkg/serverless_hpa/config"
 	"github.com/spf13/viper"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"serverless_hpa/config"
 )
 
 var K8sClient *kubernetes.Clientset
