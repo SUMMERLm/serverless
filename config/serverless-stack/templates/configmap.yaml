@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quota-conf
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: quota
+    component: quota-conf
+data:
+  localClusterName: "{{ .Values.configmap.localClusterName }}"
+  parentClusterName: "{{ .Values.configmap.parentClusterName }}"
+  clusterLevel: "{{ .Values.configmap.clusterLevel }}"
+  etcdEndpoint: "{{ .Values.configmap.etcdEndpoint }}"
+  qpsQuotaUrl: "{{ .Values.configmap.qpsQuotaUrl }}"
+  qpsRegisterUrl: "{{ .Values.configmap.qpsRegisterUrl }}"
+  sidRegisterUrl: "{{ .Values.configmap.sidRegisterUrl }}"
+  sidRegisterDelUrl: "{{ .Values.configmap.sidRegisterDelUrl }}"
+  kubeconfig: |
+{{ .Files.Get "kubeconfig.json" | indent 4 }}
+  kubeParentconfig: |
+{{ .Files.Get "kubeParentconfig.json" | indent 4 }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: serverless-hpa-conf
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: serverless-hpa
+    component: serverless-hpa-conf
+data:
+  qps-quota-url: "{{ .Values.configmap.qpsQuotaUrl }}"
+  etcd-endpoint: "{{ .Values.configmap.etcdEndpoint }}"
+  kubeconfig: |
+{{ .Files.Get "kubeconfig.json" | indent 4 }}
+
+---
+apiVersion: v1
+data:
+  # url调整为所在集群的hpa地址，更换ip地址
+  hpaUrl: "{{ .Values.configmap.hpaUrl }}"
+  qpsQuotaUrl: "{{ .Values.configmap.qpsQuotaUrl }}"
+  localClusterName: "{{ .Values.configmap.localClusterName }}"
+  parentClusterName: "{{ .Values.configmap.parentClusterName }}"
+  etcdEndpoint: "{{ .Values.configmap.etcdEndpoint }}"
+kind: ConfigMap
+metadata:
+  name: serverless-config
+  namespace: {{ .Values.namespace }}
+

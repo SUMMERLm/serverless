@@ -34,6 +34,11 @@ type ServerlessStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Workload",type="string",JSONPath=".spec.workload.workloadtype"
+//+kubebuilder:printcolumn:name="MaxReplicas",type="string",JSONPath=".spec.workload.traitServerless.maxReplicas"
+//+kubebuilder:printcolumn:name="MaxQPS",type="string",JSONPath=".spec.workload.traitServerless.maxQPS"
+//+kubebuilder:printcolumn:name="QpsStep",type="string",JSONPath=".spec.workload.traitServerless.qpsStep"
+//+kubebuilder:printcolumn:name="ELDER",type="string",JSONPath=".spec.workload.traitServerless.foundingmember"
 
 // Serverless is the Schema for the serverlesses API
 type Serverless struct {

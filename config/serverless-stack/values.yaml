@@ -1,0 +1,109 @@
+# Default values for quota.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+quotaReplicaCount: 1
+serverlessReplicaCount: 1
+hpaReplicaCount: 1
+image:
+  quota_repository: 121.40.102.76:30080/serverless/quota
+  serverless_repository: 121.40.102.76:30080/serverless/serverless
+  hpa_repository: 121.40.102.76:30080/serverless/serverless_hpa
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  quota_tag: "v0.1"
+  serverless_tag: "v0.1"
+  hpa_tag: "v0.1"
+crds:
+  # Whether the helm chart should create and update the CRDs. If false, the CRDs must be
+  # managed independently with deploy/examples/crds.yaml.
+  # **WARNING** Only set during first deployment. If later disabled the cluster may be DESTROYED.
+  # If the CRDs are deleted in this case, see the disaster recovery guide to restore them.
+  enabled: true
+
+namespace: serverless-system
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+service:
+  type: NodePort
+  port: 8000
+  nodePort: 32000
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  hypernode.cluster.pml.com.cn/node-role: System
+  #tolerations: []
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+    operator: Equal
+affinity: {}
+
+configmap:
+  localClusterName: "cluster11"
+  parentClusterName: "field1"
+  clusterLevel: "cluster"
+  etcdEndpoint: "172.24.33.36:2379"
+  qpsQuotaUrl: "http://172.24.33.35:32000/serverles_qps_quota_hpa"
+  qpsRegisterUrl: "http://172.17.9.106:31555/v1.0/globalsync/podqps"
+  sidRegisterUrl: "http://172.17.9.106:31555/v1.0/globalsync/SidClustername"
+  sidRegisterDelUrl: "http://172.17.9.106:31555/v1.0/globalsync/DeleteSidClustername"
+
